@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarah Bashandy — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAF7;
+    --card:#FFFFFF;
+    --ink:#20272B;
+    --ink-soft:#5B6670;
+    --accent:#2F6F6B;
+    --accent-soft:#E4EFEE;
+    --border:#E7E4DA;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.6;
+  }
+  a{ color:var(--accent); text-decoration:none; }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width:960px; margin:0 auto; padding:0 24px; }
+
+  h1,h2,h3{ font-family:'Poppins', sans-serif; }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,250,247,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ font-family:'Poppins', sans-serif; font-weight:600; font-size:17px; }
+  .nav-links{ list-style:none; display:flex; gap:26px; font-size:14.5px; font-weight:500; }
+  .nav-links a{ color:var(--ink-soft); }
+  .nav-links a:hover{ color:var(--accent); }
+
+  /* HERO */
+  .hero{ padding:72px 0 56px; }
+  .hero .wrap{ display:flex; align-items:center; gap:48px; flex-wrap:wrap; }
+  .hero-photo{
+    width:180px; height:180px; border-radius:50%;
+    overflow:hidden; flex-shrink:0;
+    border:3px solid var(--card);
+    box-shadow:0 0 0 1px var(--border);
+  }
+  .hero-photo img{ width:100%; height:100%; object-fit:cover; }
+  .hero-text{ flex:1; min-width:280px; }
+  .hero-text h1{ font-size:clamp(30px,4vw,40px); font-weight:700; margin-bottom:8px; }
+  .hero-role{ color:var(--accent); font-weight:600; font-size:16px; margin-bottom:14px; }
+  .hero-text p{ color:var(--ink-soft); max-width:56ch; margin-bottom:20px; }
+  .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; }
+  .btn{
+    display:inline-block; padding:10px 20px;
+    border-radius:8px; font-weight:600; font-size:14.5px;
+  }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-primary:hover{ background:#255a57; }
+  .btn-secondary{ border:1px solid var(--border); color:var(--ink); }
+  .btn-secondary:hover{ border-color:var(--accent); color:var(--accent); }
+
+  /* SECTIONS */
+  section{ padding:56px 0; border-top:1px solid var(--border); }
+  section h2{ font-size:24px; font-weight:700; margin-bottom:28px; }
+
+  /* ABOUT */
+  .about p{ max-width:70ch; color:var(--ink-soft); }
+  .about p + p{ margin-top:14px; }
+
+  /* PROJECTS */
+  .project-grid{
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:26px;
+  }
+  .project-card{
+    background:var(--card); border:1px solid var(--border);
+    border-radius:12px; overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+  .project-card img{ aspect-ratio:4/3; object-fit:cover; width:100%; }
+  .project-card-body{ padding:18px 20px 20px; }
+  .project-card h3{ font-size:17px; margin-bottom:6px; }
+  .project-meta{ font-size:12.5px; color:var(--ink-soft); margin-bottom:10px; }
+  .project-card p{ font-size:14px; color:var(--ink-soft); margin-bottom:12px; }
+  .project-tags{ display:flex; flex-wrap:wrap; gap:6px; }
+  .tag{
+    font-size:11.5px; font-weight:500;
+    background:var(--accent-soft); color:var(--accent);
+    padding:3px 9px; border-radius:20px;
+  }
+
+  /* EXPERIENCE */
+  .job{ margin-bottom:28px; }
+  .job:last-child{ margin-bottom:0; }
+  .job-top{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px 16px; }
+  .job-title{ font-weight:600; font-size:16px; }
+  .job-org{ color:var(--accent); font-weight:500; font-size:14px; margin-bottom:6px; }
+  .job-dates{ color:var(--ink-soft); font-size:13.5px; white-space:nowrap; }
+  .job ul{ padding-left:18px; margin-top:6px; }
+  .job li{ font-size:14.5px; color:var(--ink-soft); margin-bottom:5px; }
+
+  /* EDUCATION */
+  .edu-row{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px 16px; padding:12px 0; border-top:1px solid var(--border); }
+  .edu-row:first-child{ border-top:none; }
+  .edu-school{ font-weight:600; font-size:15px; }
+  .edu-degree{ font-size:14px; color:var(--ink-soft); }
+  .edu-dates{ font-size:13.5px; color:var(--ink-soft); }
+
+  /* SKILLS */
+  .skills-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:22px 40px; }
+  .skill-group-title{ font-weight:600; font-size:13.5px; color:var(--accent); margin-bottom:6px; }
+  .skill-list{ font-size:14px; color:var(--ink-soft); }
+
+  /* FOOTER */
+  footer{ padding:48px 0 60px; text-align:center; }
+  .footer-links{ display:flex; justify-content:center; gap:22px; margin-bottom:14px; font-weight:500; font-size:14.5px; }
+  .footer-note{ font-size:13px; color:var(--ink-soft); }
+
+  @media (max-width:640px){
+    .project-grid, .skills-grid{ grid-template-columns:1fr; }
+    .hero .wrap{ text-align:center; justify-content:center; }
+    .hero-actions{ justify-content:center; }
+    .nav-links{ gap:16px; font-size:13px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">Sarah Bashandy</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-photo">
+      <!-- Swap images/headshot.jpg on GitHub with your own photo, same filename -->
+      <img src="images/headshot.jpg" alt="Sarah Bashandy">
+    </div>
+    <div class="hero-text">
+      <h1>Sarah Bashandy</h1>
+      <div class="hero-role">Electrical Engineering @ UCLA</div>
+      <p>I'm an electrical engineering student focused on analog IC design, RF systems, and PCB engineering — from taping out an 8-bit ADC to building a GPS receiver from scratch. Currently a Hardware Reliability Intern at Wing Aviation (Google X).</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="mailto:sarahbashandy@g.ucla.edu">Get in touch</a>
+        <a class="btn btn-secondary" href="#" target="_blank" rel="noopener">View resume</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <h2>About Me</h2>
+    <div class="about">
+      <p>I'm a senior studying Electrical Engineering at UCLA (starting an M.S. in ECE part-time in 2027), with hands-on experience spanning mixed-signal IC design, RF/GPS signal processing, and PCB systems for aerospace hardware.</p>
+      <p>Outside of coursework, I work on the Electrical Team for the Bruin Spacecraft Group's CubeSat mission, and I've taught circuit design and embedded systems as a UCLA academic tutor. I hold a ham radio license and spend a lot of my free time in Cadence, Altium, or with a soldering iron.</p>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <h2>Projects</h2>
+    <div class="project-grid">
+
+      <div class="project-card">
+        <!-- Swap images/adc-chip.jpg with a die shot / layout screenshot -->
+        <img src="images/adc-chip.jpg" alt="8-bit SAR ADC layout">
+        <div class="project-card-body">
+          <h3>8-bit SAR ADC — Tapeout</h3>
+          <div class="project-meta">Jan 2026 — Present · TSMC 180nm</div>
+          <p>Designed and taped out a strong-arm comparator, SAR logic, and 8-bit CDAC in Cadence Virtuoso. 7.3 ENOB, 6–7µW core power, layout under 400×400µm.</p>
+          <div class="project-tags"><span class="tag">Cadence</span><span class="tag">Verilog-A</span><span class="tag">Mixed-Signal</span></div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <!-- Swap images/gps-sdr.jpg with a field-test or SDR setup photo -->
+        <img src="images/gps-sdr.jpg" alt="GPS SDR capstone project">
+        <div class="project-card-body">
+          <h3>GPS Signal Analysis via SDR</h3>
+          <div class="project-meta">Nov 2025 — Mar 2026 · Capstone</div>
+          <p>Built a full-stack SDR pipeline tracking GPS L1 signals below the noise floor using Costas loops and DLLs. Field-tested in urban canyons and open fields.</p>
+          <div class="project-tags"><span class="tag">SDR</span><span class="tag">RF</span><span class="tag">DSP</span></div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <!-- Swap images/cubesat-pcb.jpg with a photo of your EPS PCB -->
+        <img src="images/cubesat-pcb.jpg" alt="CubeSat EPS PCB">
+        <div class="project-card-body">
+          <h3>CubeSat EPS &amp; Antenna Systems</h3>
+          <div class="project-meta">Sep 2024 — Present · Bruin Spacecraft Group</div>
+          <p>Voltage drop analysis and PCB verification on Altium for a 3U CubeSat's EPS board, plus antenna system design and testing.</p>
+          <div class="project-tags"><span class="tag">Altium</span><span class="tag">4-Layer PCB</span><span class="tag">CubeSat</span></div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <!-- Swap images/lcd-driver.jpg with a schematic or sim plot screenshot -->
+        <img src="images/lcd-driver.jpg" alt="Smartwatch LCD display driver IC">
+        <div class="project-card-body">
+          <h3>Smartwatch LCD Display Driver</h3>
+          <div class="project-meta">Aug 2025 — Dec 2025 · IC Design</div>
+          <p>Two-stage amplifier (telescopic cascode + Class AB) in TSMC 45nm. ~3000x open-loop gain, &gt;45° phase margin, under 1.25mW.</p>
+          <div class="project-tags"><span class="tag">Analog IC</span><span class="tag">Class AB</span></div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <!-- Swap images/micromouse.jpg with a photo of the robot -->
+        <img src="images/micromouse.jpg" alt="Micromouse maze-solving robot">
+        <div class="project-card-body">
+          <h3>Micromouse — IEEE UCLA</h3>
+          <div class="project-meta">Aug 2024 — Jun 2025</div>
+          <p>PCB-based maze-solving robot with embedded control on STM32. Designed the board, soldered it, and wrote the navigation algorithms.</p>
+          <div class="project-tags"><span class="tag">STM32</span><span class="tag">PCB</span><span class="tag">Embedded</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <h2>Experience</h2>
+
+    <div class="job">
+      <div class="job-top">
+        <span class="job-title">Hardware Reliability Intern</span>
+        <span class="job-dates">Jun 2026 — Sep 2026</span>
+      </div>
+      <div class="job-org">Wing Aviation (Google X)</div>
+      <ul>
+        <li>Developed an accelerometer instrumentation method for drones to capture vibration data at critical test points during flight testing.</li>
+        <li>Planned and oversaw flight tests, building test matrices and validating datasets.</li>
+        <li>Developed accelerated lifetime test profiles using MIL-STD-810H.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-top">
+        <span class="job-title">Academic Group Tutor — ENG 1: Autonomous Rovers</span>
+        <span class="job-dates">Jun 2025 — Aug 2025</span>
+      </div>
+      <div class="job-org">UCLA</div>
+      <ul>
+        <li>Taught digital systems, circuit wiring, embedded programming, and schematic capture to classes of 20 students.</li>
+        <li>Mentored students on design for manufacturability and iterative testing.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div>
+        <div class="skill-group-title">Software &amp; Tools</div>
+        <div class="skill-list">Altium, KiCad, LTspice, SolidWorks, Cube IDE, Cadence, GitHub, SDR, Ham radio license</div>
+      </div>
+      <div>
+        <div class="skill-group-title">PCB &amp; Simulation</div>
+        <div class="skill-list">SPICE, Ansys HFSS, Spectre, Verilog-A, Cadence Virtuoso</div>
+      </div>
+      <div>
+        <div class="skill-group-title">Programming</div>
+        <div class="skill-list">C++, Python, MATLAB, Arduino, ESP32, STM32, Teensy</div>
+      </div>
+      <div>
+        <div class="skill-group-title">Testing &amp; Verification</div>
+        <div class="skill-list">Oscilloscope, VNA, spectrum analyzer, DMM, Simulink, Monte Carlo, PEX, SNDR/SFDR</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="wrap">
+    <h2>Education</h2>
+    <div class="edu-row">
+      <div>
+        <div class="edu-school">University of California, Los Angeles</div>
+        <div class="edu-degree">B.S., Electrical Engineering — GPA 3.59</div>
+      </div>
+      <div class="edu-dates">Sep 2023 — Jun 2026</div>
+    </div>
+    <div class="edu-row">
+      <div>
+        <div class="edu-school">University of California, Los Angeles</div>
+        <div class="edu-degree">M.S., Electrical and Computer Engineering (Part-time)</div>
+      </div>
+      <div class="edu-dates">Jun 2027</div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-links">
+      <a href="mailto:sarahbashandy@g.ucla.edu">Email</a>
+      <a href="https://github.com/YOUR-GITHUB-USERNAME" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://linkedin.com/in/YOUR-LINKEDIN" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <div class="footer-note">Santa Clara, CA · (408) 581-2954</div>
+  </div>
+</footer>
+
+</body>
+</html>
