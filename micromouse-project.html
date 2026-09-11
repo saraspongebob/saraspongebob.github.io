@@ -26,8 +26,9 @@
   h1{ font-size:clamp(28px,4vw,38px); margin-bottom:14px; }
   section{ padding:40px 0; }
   section p{ color:var(--ink-soft); max-width:70ch; margin-bottom:14px; }
-  .photo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:28px; }
-  figure img{ border:1px solid var(--border); border-radius:10px; aspect-ratio:4/3; object-fit:cover; width:100%; }
+  .photo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:28px; align-items:start; }
+  figure img{ border:1px solid var(--border); border-radius:10px; width:100%; height:auto; }
+  figure{ align-self:start; }
   figcaption{ font-size:13px; color:var(--ink-soft); margin-top:8px; }
   footer{ padding:40px 0 60px; text-align:center; font-size:13px; color:var(--ink-soft); }
   @media (max-width:640px){ .photo-grid{ grid-template-columns:1fr; } }
@@ -60,8 +61,8 @@
       </figure>
     </div>
 
-    <p style="margin-top:28px;">I designed and built a maze-solving robot from the ground up: laying out and soldering the PCB myself, then writing and tuning the embedded control running on an STM32. The board handles motor drive, sensor input, and power regulation in a small enough footprint to actually fit and move through the maze.</p>
-    <p>Beyond the hardware, most of the real work was in the navigation algorithms — getting the robot to explore an unknown maze, build a map as it goes, and then optimize its path once it's found the center. Debugging that loop, on real hardware with real sensor noise, taught me more about the gap between "works in simulation" and "works on the bench" than anything else I built that year.</p>
+    <p style="margin-top:28px;">I designed and built a maze-solving micromouse robot for the all american micromouse competition hosted by IEEE UCLA. It was the first PCB i ever made and I laid out and soldered the PCB myself, then my teammate wrote and tuned the embedded control running on an STM32. The board handles motor drive, sensor input, and power regulation in a small enough footprint to actually fit and move through the maze.</p>
+    <p>Beyond the hardware, most of the real work was in the navigation algorithms — getting the robot to explore an unknown maze, build a map as it goes, and then optimize its path once it's found the center. I did not know about chamfering back then lol.</p>
   </div>
 </section>
 
