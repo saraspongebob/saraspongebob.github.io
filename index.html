@@ -58,13 +58,16 @@
   .hero-text p{ color:var(--ink-soft); max-width:56ch; margin-bottom:20px; }
   .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; }
   .btn{
-    display:inline-block; padding:10px 20px;
-    border-radius:8px; font-weight:600; font-size:14.5px;
+    display:inline-block; padding:12px 26px;
+    border-radius:4px; font-weight:600; font-size:13px;
+    letter-spacing:0.04em; text-transform:uppercase;
+    border:2px solid var(--ink);
+    transition:background .2s ease, color .2s ease;
   }
-  .btn-primary{ background:var(--accent); color:#fff; }
-  .btn-primary:hover{ background:#255a57; }
-  .btn-secondary{ border:1px solid var(--border); color:var(--ink); }
-  .btn-secondary:hover{ border-color:var(--accent); color:var(--accent); }
+  .btn-primary{ background:var(--ink); color:#fff; }
+  .btn-primary:hover{ background:transparent; color:var(--ink); }
+  .btn-secondary{ background:transparent; color:var(--ink); }
+  .btn-secondary:hover{ background:var(--ink); color:#fff; }
 
   /* SECTIONS */
   section{ padding:56px 0; border-top:1px solid var(--border); }
@@ -79,19 +82,43 @@
     display:grid; grid-template-columns:repeat(2, 1fr); gap:26px;
   }
   .project-card{
-    background:var(--card); border:1px solid var(--border);
-    border-radius:12px; overflow:hidden;
-    display:flex; flex-direction:column;
+    position:relative;
+    display:block;
+    aspect-ratio:4/3;
+    border-radius:8px;
+    overflow:hidden;
+    background:var(--card);
+    border:1px solid var(--border);
   }
-  .project-card img{ aspect-ratio:4/3; object-fit:cover; width:100%; }
-  .project-card-body{ padding:18px 20px 20px; }
-  .project-card h3{ font-size:17px; margin-bottom:6px; }
-  .project-meta{ font-size:12.5px; color:var(--ink-soft); margin-bottom:10px; }
-  .project-card p{ font-size:14px; color:var(--ink-soft); margin-bottom:12px; }
+  .project-card img{
+    width:100%; height:100%; object-fit:cover;
+    transition:transform .4s ease;
+  }
+  .project-card:hover img{ transform:scale(1.06); }
+  .project-overlay{
+    position:absolute; inset:0;
+    background:rgba(32,39,43,0.90);
+    color:#fff;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center;
+    padding:24px;
+    opacity:0;
+    transition:opacity .3s ease;
+  }
+  .project-card:hover .project-overlay{ opacity:1; }
+  .project-overlay h3{ font-size:18px; margin-bottom:6px; color:#fff; }
+  .project-overlay .project-meta{ color:rgba(255,255,255,0.7); margin-bottom:10px; }
+  .project-overlay p{ font-size:13.5px; color:rgba(255,255,255,0.85); margin-bottom:12px; }
+  .project-overlay .project-tags{ justify-content:center; margin-bottom:12px; }
+  .project-overlay .tag{ background:rgba(255,255,255,0.15); color:#fff; }
+  .project-overlay .view-link{
+    font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
+    color:#fff; border-bottom:1px solid rgba(255,255,255,0.6); padding-bottom:2px;
+  }
   .project-tags{ display:flex; flex-wrap:wrap; gap:6px; }
   .tag{
     font-size:11.5px; font-weight:500;
-    background:var(--accent-soft); color:var(--accent);
     padding:3px 9px; border-radius:20px;
   }
 
@@ -180,40 +207,38 @@
     <h2>Projects</h2>
     <div class="project-grid">
 
-      <div class="project-card">
+      <a class="project-card" href="adc-project.html">
         <!-- Swap images/adc-chip.jpg with a die shot / layout screenshot -->
-        <a href="adc-project.html">
-          <img src="images/adc-chip.jpg" alt="8-bit SAR ADC layout">
-        </a>
-        <div class="project-card-body">
-          <h3><a href="adc-project.html" style="color:inherit;">8-bit SAR ADC — Tapeout</a></h3>
+        <img src="images/adc-chip.jpg" alt="8-bit SAR ADC layout">
+        <div class="project-overlay">
+          <h3>8-bit SAR ADC — Tapeout</h3>
           <div class="project-meta">Jan 2026 — Present · TSMC 180nm</div>
-          <p>Designed and taped out a strong-arm comparator, SAR logic, and 8-bit CDAC in Cadence Virtuoso. 7.3 ENOB, 6–7µW core power, layout under 400×400µm.</p>
+          <p>Strong-arm comparator, SAR logic, and 8-bit CDAC in Cadence Virtuoso. 7.3 ENOB, 6–7µW core power.</p>
           <div class="project-tags"><span class="tag">Cadence</span><span class="tag">Verilog-A</span><span class="tag">Mixed-Signal</span></div>
-          <p style="margin-top:10px;"><a href="adc-project.html">See full writeup →</a></p>
+          <span class="view-link">View Project →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="project-card">
+      <a class="project-card" href="files/capstone-paper.pdf" target="_blank" rel="noopener">
         <!-- Swap images/gps-sdr.jpg with a field-test or SDR setup photo -->
         <img src="images/gps-sdr.jpg" alt="GPS SDR capstone project">
-        <div class="project-card-body">
+        <div class="project-overlay">
           <h3>GPS Signal Analysis via SDR</h3>
           <div class="project-meta">Nov 2025 — Mar 2026 · Capstone</div>
-          <p>Built a full-stack SDR pipeline tracking GPS L1 signals below the noise floor using Costas loops and DLLs. Field-tested in urban canyons and open fields.</p>
+          <p>Full-stack SDR pipeline tracking GPS L1 signals below the noise floor using Costas loops and DLLs.</p>
           <div class="project-tags"><span class="tag">SDR</span><span class="tag">RF</span><span class="tag">DSP</span></div>
           <!-- Upload your capstone paper PDF to the "files" folder, named capstone-paper.pdf -->
-          <p style="margin-top:10px;"><a href="files/capstone-paper.pdf" target="_blank" rel="noopener">Read the full paper →</a></p>
+          <span class="view-link">Read the Paper →</span>
         </div>
-      </div>
+      </a>
 
       <div class="project-card">
         <!-- Swap images/cubesat-pcb.jpg with a photo of your EPS PCB -->
         <img src="images/cubesat-pcb.jpg" alt="CubeSat EPS PCB">
-        <div class="project-card-body">
+        <div class="project-overlay">
           <h3>CubeSat EPS &amp; Antenna Systems</h3>
           <div class="project-meta">Sep 2024 — Present · Bruin Spacecraft Group</div>
-          <p>Voltage drop analysis and PCB verification on Altium for a 3U CubeSat's EPS board, plus antenna system design and testing.</p>
+          <p>Voltage drop analysis and PCB verification on Altium for a 3U CubeSat's EPS board, plus antenna design.</p>
           <div class="project-tags"><span class="tag">Altium</span><span class="tag">4-Layer PCB</span><span class="tag">CubeSat</span></div>
         </div>
       </div>
@@ -221,10 +246,10 @@
       <div class="project-card">
         <!-- Swap images/lcd-driver.jpg with a schematic or sim plot screenshot -->
         <img src="images/lcd-driver.jpg" alt="Smartwatch LCD display driver IC">
-        <div class="project-card-body">
+        <div class="project-overlay">
           <h3>Smartwatch LCD Display Driver</h3>
           <div class="project-meta">Aug 2025 — Dec 2025 · IC Design</div>
-          <p>Two-stage amplifier (telescopic cascode + Class AB) in TSMC 45nm. ~3000x open-loop gain, &gt;45° phase margin, under 1.25mW.</p>
+          <p>Two-stage amplifier (telescopic cascode + Class AB) in TSMC 45nm. ~3000x open-loop gain, under 1.25mW.</p>
           <div class="project-tags"><span class="tag">Analog IC</span><span class="tag">Class AB</span></div>
         </div>
       </div>
@@ -232,10 +257,10 @@
       <div class="project-card">
         <!-- Swap images/micromouse.jpg with a photo of the robot -->
         <img src="images/micromouse.jpg" alt="Micromouse maze-solving robot">
-        <div class="project-card-body">
+        <div class="project-overlay">
           <h3>Micromouse — IEEE UCLA</h3>
           <div class="project-meta">Aug 2024 — Jun 2025</div>
-          <p>PCB-based maze-solving robot with embedded control on STM32. Designed the board, soldered it, and wrote the navigation algorithms.</p>
+          <p>PCB-based maze-solving robot with embedded control on STM32. Designed, soldered, and programmed navigation.</p>
           <div class="project-tags"><span class="tag">STM32</span><span class="tag">PCB</span><span class="tag">Embedded</span></div>
         </div>
       </div>
@@ -243,10 +268,10 @@
       <div class="project-card">
         <!-- Swap images/go-kart.jpg with a photo of the go-kart -->
         <img src="images/go-kart.jpg" alt="Electric go-kart build">
-        <div class="project-card-body">
+        <div class="project-overlay">
           <h3>Electric Go-Kart Build</h3>
           <div class="project-meta">Add your dates here</div>
-          <p>Add a sentence or two about what you built, what you designed/wired yourself, and any specs worth bragging about (top speed, motor power, battery setup, etc.).</p>
+          <p>Add a sentence or two about what you built and any specs worth bragging about.</p>
           <div class="project-tags"><span class="tag">Add a tag</span><span class="tag">Add a tag</span></div>
         </div>
       </div>
