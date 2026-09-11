@@ -95,6 +95,13 @@
     transition:transform .4s ease;
   }
   .project-card:hover img{ transform:scale(1.06); }
+  .card-img-hover{
+    position:absolute; inset:0;
+    width:100%; height:100%; object-fit:cover;
+    opacity:0;
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .project-card:hover .card-img-hover{ opacity:1; }
   .project-overlay{
     position:absolute; inset:0;
     background:rgba(32,39,43,0.90);
@@ -225,18 +232,20 @@
       </a>
 
       <div class="project-card">
-        <!-- Swap images/lcd-driver.jpg with a schematic or sim plot screenshot -->
-        <img src="images/lcd-driver.jpg" alt="Smartwatch LCD display driver IC">
+        <!-- Swap images/slot-car-pcb.jpg with a photo of the slot car / traffic light PCBs -->
+        <img src="images/slot-car-pcb.jpg" alt="Smart slot car PCB project">
         <div class="project-overlay">
-          <h3>Smartwatch LCD Display Driver</h3>
-          <div class="project-meta">Aug 2025 — Dec 2025 · IC Design</div>
-          <p>Two-stage amplifier (telescopic cascode + Class AB) in TSMC 45nm. ~3000x open-loop gain, under 1.25mW.</p>
+          <h3>Smart Slot Car PCBs</h3>
+          <div class="project-meta">Add your dates here</div>
+          <p>Designed PCBs for a friend's embedded systems project — autonomous slot cars ("mini-Waymos") that respond to visual stimuli, running on a Raspberry Pi and track voltage, plus a companion traffic-light PCB.</p>
         </div>
       </div>
 
       <div class="project-card">
-        <!-- Swap images/micromouse.jpg with a photo of the robot -->
+        <!-- Default: photo of the physical PCB -->
         <img src="images/micromouse.jpg" alt="Micromouse maze-solving robot">
+        <!-- Hover: 3D render/view of the PCB -->
+        <img class="card-img-hover" src="images/micromouse-pcb-3d.jpg" alt="3D view of the Micromouse PCB">
         <div class="project-overlay">
           <h3>Micromouse — IEEE UCLA</h3>
           <div class="project-meta">Aug 2024 — Jun 2025</div>
