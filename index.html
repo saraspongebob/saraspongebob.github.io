@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sarah Bashandy — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#FAFAF7;
@@ -17,6 +17,10 @@
     --border:#E7E4DA;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
+  .power-rail{ display:flex; flex-direction:column; }
+  .power-rail .rail-line{ height:4px; width:100%; }
+  .power-rail .rail-red{ background:repeating-linear-gradient(to right, #D93B3B 0 14px, #C42E2E 14px 16px); }
+  .power-rail .rail-blue{ background:repeating-linear-gradient(to right, #3A6FC4 0 14px, #2E5CA8 14px 16px); }
   body{
     background:var(--bg);
     color:var(--ink);
@@ -25,7 +29,7 @@
   }
   a{ color:var(--accent); text-decoration:none; }
   img{ max-width:100%; display:block; }
-  .wrap{ max-width:960px; margin:0 auto; padding:0 24px; }
+  .wrap{ max-width:960px; margin:0 auto; padding:0 24px; position:relative; }
 
   h1,h2,h3{ font-family:'Poppins', sans-serif; }
 
@@ -37,22 +41,25 @@
     border-bottom:1px solid var(--border);
   }
   nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
-  .brand{ font-family:'Poppins', sans-serif; font-weight:600; font-size:17px; }
+  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .brand-name{ font-family:'Poppins', sans-serif; font-weight:600; font-size:17px; }
+  .brand-rev{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--accent); letter-spacing:0.03em; }
   .nav-links{ list-style:none; display:flex; gap:26px; font-size:14.5px; font-weight:500; }
   .nav-links a{ color:var(--ink-soft); }
   .nav-links a:hover{ color:var(--accent); }
 
   /* HERO */
-  .hero{ padding:72px 0 56px; }
+  .hero{ padding:72px 0 56px; position:relative; }
   .hero .wrap{ display:flex; align-items:center; gap:48px; flex-wrap:wrap; }
   .hero-photo{
     width:180px; height:180px; border-radius:50%;
     overflow:hidden; flex-shrink:0;
     border:3px solid var(--card);
     box-shadow:0 0 0 1px var(--border);
+    position:relative; z-index:1;
   }
   .hero-photo img{ width:100%; height:100%; object-fit:cover; }
-  .hero-text{ flex:1; min-width:280px; }
+  .hero-text{ flex:1; min-width:280px; position:relative; z-index:1; }
   .hero-text h1{ font-size:clamp(30px,4vw,40px); font-weight:700; margin-bottom:8px; }
   .hero-role{ color:var(--accent); font-weight:600; font-size:16px; margin-bottom:14px; }
   .hero-text p{ color:var(--ink-soft); max-width:56ch; margin-bottom:20px; }
@@ -64,13 +71,22 @@
     border:2px solid var(--ink);
     transition:background .2s ease, color .2s ease;
   }
-  .btn-primary{ background:var(--ink); color:#fff; }
-  .btn-primary:hover{ background:transparent; color:var(--ink); }
+  .btn-primary{ background:#3A6FC4; color:#fff; border-color:#3A6FC4; }
+  .btn-primary:hover{ background:transparent; color:#3A6FC4; }
   .btn-secondary{ background:transparent; color:var(--ink); }
   .btn-secondary:hover{ background:var(--ink); color:#fff; }
 
-  /* SECTIONS */
-  section{ padding:56px 0; border-top:1px solid var(--border); }
+  /* SECTIONS + RESISTOR DIVIDER */
+  section{ padding:0 0 60px; }
+  .resistor-divider{ width:100%; overflow:hidden; margin-bottom:44px; }
+  .resistor-divider svg{ display:block; width:100%; height:22px; }
+  section .wrap > .section-eyebrow{ margin-top:0; }
+  section:first-of-type{ padding-top:0; }
+
+  .section-eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--accent);
+    letter-spacing:0.06em; margin-bottom:8px; display:block;
+  }
   section h2{ font-size:24px; font-weight:700; margin-bottom:28px; }
 
   /* ABOUT */
@@ -90,6 +106,18 @@
     background:var(--card);
     border:1px solid var(--border);
   }
+  .project-card::after{
+    content:""; position:absolute; top:10px; right:10px;
+    width:7px; height:7px; border-radius:50%; z-index:2;
+  }
+  .project-grid a:nth-of-type(4n+1)::after,
+  .project-grid div:nth-of-type(4n+1)::after{ background:#D93B3B; box-shadow:0 0 5px #D93B3B99; }
+  .project-grid a:nth-of-type(4n+2)::after,
+  .project-grid div:nth-of-type(4n+2)::after{ background:#3F9B4A; box-shadow:0 0 5px #3F9B4A99; }
+  .project-grid a:nth-of-type(4n+3)::after,
+  .project-grid div:nth-of-type(4n+3)::after{ background:#3A6FC4; box-shadow:0 0 5px #3A6FC499; }
+  .project-grid a:nth-of-type(4n)::after,
+  .project-grid div:nth-of-type(4n)::after{ background:#F0821F; box-shadow:0 0 5px #F0821F99; }
   .project-card img{
     width:100%; height:100%; object-fit:cover;
     transition:transform .4s ease;
@@ -115,13 +143,17 @@
   }
   .project-card:hover .project-overlay{ opacity:1; }
   .project-overlay h3{ font-size:18px; margin-bottom:6px; color:#fff; }
-  .project-overlay .project-meta{ color:rgba(255,255,255,0.7); margin-bottom:10px; }
+  .project-overlay .project-meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px; color:rgba(255,255,255,0.65); margin-bottom:10px;
+    letter-spacing:0.02em;
+  }
   .project-overlay p{ font-size:13.5px; color:rgba(255,255,255,0.85); margin-bottom:12px; }
   .project-overlay .view-link{
-    font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;
     color:#fff; border-bottom:1px solid rgba(255,255,255,0.6); padding-bottom:2px;
   }
-
 
   /* EXPERIENCE */
   .job{ margin-bottom:28px; }
@@ -129,40 +161,90 @@
   .job-top{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px 16px; }
   .job-title{ font-weight:600; font-size:16px; }
   .job-org{ color:var(--accent); font-weight:500; font-size:14px; margin-bottom:6px; }
-  .job-dates{ color:var(--ink-soft); font-size:13.5px; white-space:nowrap; }
-  .job ul{ padding-left:18px; margin-top:6px; }
-  .job li{ font-size:14.5px; color:var(--ink-soft); margin-bottom:5px; }
+  .job-dates{ font-family:'IBM Plex Mono', monospace; color:var(--ink-soft); font-size:12.5px; white-space:nowrap; }
+  .job ul{ list-style:none; padding-left:0; margin-top:6px; }
+  .job li{
+    font-size:14.5px; color:var(--ink-soft); margin-bottom:9px;
+    position:relative; padding-left:22px;
+  }
+  .job li::before{
+    content:""; position:absolute; left:0; top:6px;
+    width:8px; height:8px; border-radius:50%;
+  }
+  .job li:nth-child(3n+1)::before{ background:#D93B3B; box-shadow:0 0 4px #D93B3B99; }
+  .job li:nth-child(3n+2)::before{ background:#3F9B4A; box-shadow:0 0 4px #3F9B4A99; }
+  .job li:nth-child(3n+3)::before{ background:#3A6FC4; box-shadow:0 0 4px #3A6FC499; }
 
   /* EDUCATION */
   .edu-row{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px 16px; padding:12px 0; border-top:1px solid var(--border); }
   .edu-row:first-child{ border-top:none; }
   .edu-school{ font-weight:600; font-size:15px; }
   .edu-degree{ font-size:14px; color:var(--ink-soft); }
-  .edu-dates{ font-size:13.5px; color:var(--ink-soft); }
+  .edu-dates{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-soft); }
 
   /* SKILLS */
   .skills-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:22px 40px; }
-  .skill-group-title{ font-weight:600; font-size:13.5px; color:var(--accent); margin-bottom:6px; }
+  .skill-group-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600; font-size:12.5px; margin-bottom:6px;
+    letter-spacing:0.03em;
+    display:flex; align-items:center; gap:7px;
+  }
+  .skill-group-title::before{
+    content:""; width:9px; height:9px; border-radius:2px; flex-shrink:0;
+  }
+  .skill-group-title.sw{ color:#3A6FC4; }
+  .skill-group-title.sw::before{ background:#3A6FC4; }
+  .skill-group-title.pcb{ color:#F0821F; }
+  .skill-group-title.pcb::before{ background:#F0821F; }
+  .skill-group-title.prog{ color:#3F9B4A; }
+  .skill-group-title.prog::before{ background:#3F9B4A; }
+  .skill-group-title.test{ color:#7B4BA0; }
+  .skill-group-title.test::before{ background:#7B4BA0; }
   .skill-list{ font-size:14px; color:var(--ink-soft); }
 
   /* FOOTER */
-  footer{ padding:48px 0 60px; text-align:center; }
-  .footer-links{ display:flex; justify-content:center; gap:22px; margin-bottom:14px; font-weight:500; font-size:14.5px; }
-  .footer-note{ font-size:13px; color:var(--ink-soft); }
+  footer{ padding:52px 0 60px; text-align:center; }
+  .footer-pinout{
+    display:flex; justify-content:center; flex-wrap:wrap; gap:10px 28px; margin-bottom:18px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px;
+  }
+  .footer-pinout a{
+    display:flex; align-items:center; gap:7px; color:var(--ink); font-weight:500;
+  }
+  .footer-pinout a:hover{ color:var(--accent); }
+  .pin-dot{
+    width:6px; height:6px; border-radius:50%;
+    flex-shrink:0;
+  }
+  .pin-dot.email{ background:#D93B3B; }
+  .pin-dot.github{ background:#3A6FC4; }
+  .pin-dot.linkedin{ background:#3F9B4A; }
+  .footer-note{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); }
 
   @media (max-width:640px){
     .project-grid, .skills-grid{ grid-template-columns:1fr; }
     .hero .wrap{ text-align:center; justify-content:center; }
     .hero-actions{ justify-content:center; }
     .nav-links{ gap:16px; font-size:13px; }
+    .hero-circuit{ display:none; }
+    .resistor-divider svg{ height:18px; }
   }
 </style>
 </head>
 <body>
 
+<div class="power-rail">
+  <div class="rail-line rail-red"></div>
+  <div class="rail-line rail-blue"></div>
+</div>
+
 <nav>
   <div class="wrap">
-    <div class="brand">Sarah Bashandy</div>
+    <div class="brand">
+      <span class="brand-name">Sarah Bashandy</span>
+      <span class="brand-rev">rev.2026.09</span>
+    </div>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#projects">Projects</a></li>
@@ -194,17 +276,33 @@
 
 <section id="about">
   <div class="wrap">
+    <span class="section-eyebrow">01 // ABOUT</span>
     <h2>About Me</h2>
     <div class="about">
       <p>I graduated from UCLA in June 2026 with a B.S. in Electrical Engineering. I'm now pursuing an M.S. in Electrical and Computer Engineering at UCLA, expected June 2027, with a focus on analog design.</p>
       <p>My experience spans mixed-signal IC design, RF/GPS signal processing, and PCB systems for aerospace hardware.</p>
-      <p>Outside of coursework, I interned at Wing last summer as a Hardware reliability intern and I work on the Electrical Team for the Bruin Spacecraft Group's CubeSat mission, and I've taught circuit design and embedded systems as a UCLA academic tutor. I hold a ham radio license and spend a lot of my free time running simulations.</p>
+      <p>Outside of coursework, I work on the Electrical Team for the Bruin Spacecraft Group's CubeSat mission, and I've taught circuit design and embedded systems as a UCLA academic tutor. I hold a ham radio license and spend a lot of my free time running simulations.</p>
     </div>
   </div>
 </section>
 
+<div class="resistor-divider">
+  <svg viewBox="0 0 1000 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="11" x2="430" y2="11" stroke="#C7D6D3" stroke-width="2"/>
+    <line x1="570" y1="11" x2="1000" y2="11" stroke="#C7D6D3" stroke-width="2"/>
+    <rect x="430" y="3" width="140" height="16" rx="4" fill="#EFE3C4" stroke="#20272B" stroke-width="1.6"/>
+    <rect x="452" y="3" width="10" height="16" fill="#D93B3B"/>
+    <rect x="478" y="3" width="10" height="16" fill="#7B4BA0"/>
+    <rect x="504" y="3" width="10" height="16" fill="#F0C325"/>
+    <rect x="536" y="3" width="10" height="16" fill="#C9A227"/>
+    <circle cx="0" cy="11" r="4" fill="#FAFAF7" stroke="#2F6F6B" stroke-width="1.6"/>
+    <circle cx="1000" cy="11" r="4" fill="#FAFAF7" stroke="#2F6F6B" stroke-width="1.6"/>
+  </svg>
+</div>
+
 <section id="projects">
   <div class="wrap">
+    <span class="section-eyebrow">02 // PROJECTS</span>
     <h2>Projects</h2>
     <div class="project-grid">
 
@@ -213,7 +311,7 @@
         <img src="images/adc-chip.jpg" alt="8-bit SAR ADC layout">
         <div class="project-overlay">
           <h3>8-bit SAR ADC — Tapeout</h3>
-          <div class="project-meta">Jan 2026 — Present · TSMC 180nm</div>
+          <div class="project-meta">JAN 2026 — PRESENT · TSMC 180NM</div>
           <p>Strong-arm comparator, SAR logic, and 8-bit CDAC in Cadence Virtuoso. 7.3 ENOB, 6–7µW core power.</p>
           <span class="view-link">View Project →</span>
         </div>
@@ -224,7 +322,7 @@
         <img src="images/gps-sdr.jpg" alt="GPS SDR capstone project">
         <div class="project-overlay">
           <h3>GPS Signal Analysis via SDR</h3>
-          <div class="project-meta">Nov 2025 — Mar 2026 · Capstone</div>
+          <div class="project-meta">NOV 2025 — MAR 2026 · CAPSTONE</div>
           <p>Full-stack SDR pipeline tracking GPS L1 signals below the noise floor using Costas loops and DLLs.</p>
           <!-- Upload your capstone paper PDF to the "files" folder, named capstone-paper.pdf -->
           <span class="view-link">Read Full Paper →</span>
@@ -236,7 +334,7 @@
         <img src="images/slot-car-pcb.jpg" alt="Smart slot car PCB project">
         <div class="project-overlay">
           <h3>Smart Slot Car PCBs</h3>
-          <div class="project-meta">Add your dates here</div>
+          <div class="project-meta">ADD YOUR DATES HERE</div>
           <p>Designed PCBs for a friend's embedded systems project — autonomous slot cars ("mini-Waymos") that respond to visual stimuli, running on a Raspberry Pi and track voltage, plus a companion traffic-light PCB.</p>
           <span class="view-link">View Project →</span>
         </div>
@@ -249,7 +347,7 @@
         <img class="card-img-hover" src="images/micromouse-pcb-3d.jpg" alt="3D view of the Micromouse PCB">
         <div class="project-overlay">
           <h3>Micromouse — IEEE UCLA</h3>
-          <div class="project-meta">Aug 2024 — Jun 2025</div>
+          <div class="project-meta">AUG 2024 — JUN 2025</div>
           <p>PCB-based maze-solving robot with embedded control on STM32. Designed, soldered, and programmed navigation.</p>
           <span class="view-link">View Project →</span>
         </div>
@@ -260,7 +358,7 @@
         <img src="images/go-kart.jpg" alt="go-kart build">
         <div class="project-overlay">
           <h3>Electric Go-Kart Build</h3>
-          <div class="project-meta">March-June 2024</div>
+          <div class="project-meta">MARCH — JUNE 2024</div>
           <p>Built a go-kart with my classmates for one of my classes that won the race at the end of the class!</p>
           <span class="view-link">View Project →</span>
         </div>
@@ -271,7 +369,7 @@
         <img src="images/autonomous-rovers.jpg" alt="ENG 1 Autonomous Rovers teaching">
         <div class="project-overlay">
           <h3>Teaching ENG 1: Autonomous Rovers</h3>
-          <div class="project-meta">Jun 2025 — Aug 2025 · UCLA</div>
+          <div class="project-meta">JUN 2025 — AUG 2025 · UCLA</div>
           <p>Taught digital systems, circuit wiring, and embedded programming to classes of 20 students building their own rover PCBs.</p>
           <span class="view-link">View Project →</span>
         </div>
@@ -282,7 +380,7 @@
         <img src="images/cubesat-pcb.jpg" alt="Bruin Spacecraft Group CubeSat">
         <div class="project-overlay">
           <h3>Member of BruinSpace Electrical Team</h3>
-          <div class="project-meta">Sep 2024 — Present · Bruin Spacecraft Group</div>
+          <div class="project-meta">SEP 2024 — PRESENT · BRUIN SPACECRAFT GROUP</div>
           <p>Working on the Electrical Team for a 3U CubeSat mission — PCB design, verification, and testing.</p>
         </div>
       </div>
@@ -291,14 +389,29 @@
   </div>
 </section>
 
+<div class="resistor-divider">
+  <svg viewBox="0 0 1000 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="11" x2="430" y2="11" stroke="#C7D6D3" stroke-width="2"/>
+    <line x1="570" y1="11" x2="1000" y2="11" stroke="#C7D6D3" stroke-width="2"/>
+    <rect x="430" y="3" width="140" height="16" rx="4" fill="#EFE3C4" stroke="#20272B" stroke-width="1.6"/>
+    <rect x="452" y="3" width="10" height="16" fill="#3A6FC4"/>
+    <rect x="478" y="3" width="10" height="16" fill="#F0821F"/>
+    <rect x="504" y="3" width="10" height="16" fill="#3F9B4A"/>
+    <rect x="536" y="3" width="10" height="16" fill="#C9A227"/>
+    <circle cx="0" cy="11" r="4" fill="#FAFAF7" stroke="#2F6F6B" stroke-width="1.6"/>
+    <circle cx="1000" cy="11" r="4" fill="#FAFAF7" stroke="#2F6F6B" stroke-width="1.6"/>
+  </svg>
+</div>
+
 <section id="experience">
   <div class="wrap">
+    <span class="section-eyebrow">03 // EXPERIENCE</span>
     <h2>Experience</h2>
 
     <div class="job">
       <div class="job-top">
         <span class="job-title">Hardware Reliability Intern</span>
-        <span class="job-dates">Jun 2026 — Sep 2026</span>
+        <span class="job-dates">JUN 2026 — SEP 2026</span>
       </div>
       <div class="job-org">Wing Aviation (Google X)</div>
       <ul>
@@ -311,7 +424,7 @@
     <div class="job">
       <div class="job-top">
         <span class="job-title">Academic Group Tutor — ENG 1: Autonomous Rovers</span>
-        <span class="job-dates">Jun 2025 — Aug 2025</span>
+        <span class="job-dates">JUN 2025 — AUG 2025</span>
       </div>
       <div class="job-org">UCLA</div>
       <ul>
@@ -322,58 +435,88 @@
   </div>
 </section>
 
+<div class="resistor-divider">
+  <svg viewBox="0 0 1000 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="11" x2="430" y2="11" stroke="#C7D6D3" stroke-width="2"/>
+    <line x1="570" y1="11" x2="1000" y2="11" stroke="#C7D6D3" stroke-width="2"/>
+    <rect x="430" y="3" width="140" height="16" rx="4" fill="#EFE3C4" stroke="#20272B" stroke-width="1.6"/>
+    <rect x="452" y="3" width="10" height="16" fill="#7B4BA0"/>
+    <rect x="478" y="3" width="10" height="16" fill="#3F9B4A"/>
+    <rect x="504" y="3" width="10" height="16" fill="#D93B3B"/>
+    <rect x="536" y="3" width="10" height="16" fill="#C9A227"/>
+    <circle cx="0" cy="11" r="4" fill="#FAFAF7" stroke="#2F6F6B" stroke-width="1.6"/>
+    <circle cx="1000" cy="11" r="4" fill="#FAFAF7" stroke="#2F6F6B" stroke-width="1.6"/>
+  </svg>
+</div>
+
 <section id="skills">
   <div class="wrap">
+    <span class="section-eyebrow">04 // SKILLS</span>
     <h2>Skills</h2>
     <div class="skills-grid">
       <div>
-        <div class="skill-group-title">Software &amp; Tools</div>
+        <div class="skill-group-title sw">SOFTWARE &amp; TOOLS</div>
         <div class="skill-list">Altium, KiCad, LTspice, SolidWorks, Cube IDE, Cadence, GitHub, SDR, Ham radio license</div>
       </div>
       <div>
-        <div class="skill-group-title">PCB &amp; Simulation</div>
+        <div class="skill-group-title pcb">PCB &amp; SIMULATION</div>
         <div class="skill-list">SPICE, Ansys HFSS, Spectre, Verilog-A, Cadence Virtuoso</div>
       </div>
       <div>
-        <div class="skill-group-title">Programming</div>
+        <div class="skill-group-title prog">PROGRAMMING</div>
         <div class="skill-list">C++, Python, MATLAB, Arduino, ESP32, STM32, Teensy</div>
       </div>
       <div>
-        <div class="skill-group-title">Testing &amp; Verification</div>
+        <div class="skill-group-title test">TESTING &amp; VERIFICATION</div>
         <div class="skill-list">Oscilloscope, VNA, spectrum analyzer, DMM, Simulink, Monte Carlo, PEX, SNDR/SFDR</div>
       </div>
     </div>
   </div>
 </section>
 
+<div class="resistor-divider">
+  <svg viewBox="0 0 1000 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="11" x2="430" y2="11" stroke="#C7D6D3" stroke-width="2"/>
+    <line x1="570" y1="11" x2="1000" y2="11" stroke="#C7D6D3" stroke-width="2"/>
+    <rect x="430" y="3" width="140" height="16" rx="4" fill="#EFE3C4" stroke="#20272B" stroke-width="1.6"/>
+    <rect x="452" y="3" width="10" height="16" fill="#F0821F"/>
+    <rect x="478" y="3" width="10" height="16" fill="#3A6FC4"/>
+    <rect x="504" y="3" width="10" height="16" fill="#F0C325"/>
+    <rect x="536" y="3" width="10" height="16" fill="#C9A227"/>
+    <circle cx="0" cy="11" r="4" fill="#FAFAF7" stroke="#2F6F6B" stroke-width="1.6"/>
+    <circle cx="1000" cy="11" r="4" fill="#FAFAF7" stroke="#2F6F6B" stroke-width="1.6"/>
+  </svg>
+</div>
+
 <section id="education">
   <div class="wrap">
+    <span class="section-eyebrow">05 // EDUCATION</span>
     <h2>Education</h2>
     <div class="edu-row">
       <div>
         <div class="edu-school">University of California, Los Angeles</div>
         <div class="edu-degree">B.S., Electrical Engineering — GPA 3.59</div>
       </div>
-      <div class="edu-dates">Sep 2023 — Jun 2026</div>
+      <div class="edu-dates">SEP 2023 — JUN 2026</div>
     </div>
     <div class="edu-row">
       <div>
         <div class="edu-school">University of California, Los Angeles</div>
         <div class="edu-degree">M.S., Electrical and Computer Engineering (Part-time)</div>
       </div>
-      <div class="edu-dates">Jun 2027</div>
+      <div class="edu-dates">JUN 2027</div>
     </div>
   </div>
 </section>
 
 <footer id="contact">
   <div class="wrap">
-    <div class="footer-links">
-      <a href="mailto:sarahbashandy@g.ucla.edu">Email</a>
-      <a href="https://github.com/saraspongebob" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://linkedin.com/in/sarahbashandy" target="_blank" rel="noopener">LinkedIn</a>
+    <div class="footer-pinout">
+      <a href="mailto:sarahbashandy@g.ucla.edu"><span class="pin-dot email"></span>EMAIL</a>
+      <a href="https://github.com/saraspongebob" target="_blank" rel="noopener"><span class="pin-dot github"></span>GITHUB</a>
+      <a href="https://linkedin.com/in/sarahbashandy" target="_blank" rel="noopener"><span class="pin-dot linkedin"></span>LINKEDIN</a>
     </div>
-    <div class="footer-note">Santa Clara, CA · (408) 581-2954</div>
+    <div class="footer-note">SANTA CLARA, CA · (408) 581-2954</div>
   </div>
 </footer>
 
