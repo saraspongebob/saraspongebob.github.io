@@ -103,13 +103,17 @@
     <p>I designed and taped out a sequential 8-bit SAR ADC with a differential input. The signal path starts with a transmission-gate input sampler feeding a capacitive DAC (CDAC); the switches on the CDAC are controlled by a custom SAR logic block that resolves one bit per clock cycle.</p>
     <p>The SAR logic itself is a chain of D flip-flops — one per bit — where each DFF turns on the next bit's decision cycle in sequence. When a bit becomes active, it drives a small pipeline: the SAR data registry captures that bit's decision, which enables the active registry, which enables the switch driver, which physically sets that bit's CDAC switches. Once a bit resolves, the chain hands off to the next bit, and a final "done" signal flags when all 8 bits have been decided.</p>
     <p>Every gate in this design — NAND, NOR, inverters, the DFFs, the muxes — was built and laid out by hand rather than pulled from a standard cell library, which put the full instance count over 1,300. The SAR logic layout in particular is something I'm proud of: it's dense, and getting the timing and routing to work cleanly in that footprint took a lot of iteration.</p>
+    <p>Each CDAC switch is referenced to the common-mode voltage (0.9V) during sampling. Once a bit's decision is made, the corresponding DFF output connects that bit's capacitor to either VDD (1.8V) or VSS (0V), depending on two things: the comparator's output for that cycle, and whether the capacitor sits in the positive or negative cap chain. That combination is what steers each bit toward the correct code during the successive approximation.</p>
 
     <table class="spec-table">
       <tr><td class="spec-label">Process</td><td class="spec-value">TSMC 180nm</td></tr>
-      <tr><td class="spec-label">ENOB</td><td class="spec-value">7.3 bits</td></tr>
+      <tr><td class="spec-label">Voltage range</td><td class="spec-value">0 – 1.8V</td></tr>
+      <tr><td class="spec-label">Pre-layout ENOB</td><td class="spec-value">7.3 bits</td></tr>
+      <tr><td class="spec-label">Post-layout ENOB</td><td class="spec-value">7.1 bits (@ 10MHz clock)</td></tr>
       <tr><td class="spec-label">Core power</td><td class="spec-value">6–7 µW</td></tr>
       <tr><td class="spec-label">Layout area</td><td class="spec-value">&lt; 400 × 400 µm</td></tr>
       <tr><td class="spec-label">Instance count</td><td class="spec-value">1,300+</td></tr>
+      <tr><td class="spec-label">Common-mode voltage</td><td class="spec-value">0.9V</td></tr>
     </table>
   </div>
 </section>
@@ -170,6 +174,31 @@
       <figcaption>Gate-level switch driver logic, generating the CDAC switch control signals for each bit.</figcaption>
     </figure>
     <div class="note">Layout screenshots aren't included here — some of this work touches material I want to double check the sharing terms on before posting publicly. The schematics above are my own design work.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Verification &amp; Breakout PCB</h2>
+    <p>To test the chip after tapeout, I designed a verification PCB with layout techniques aimed at reducing parasitic inductance and preserving signal integrity for high-speed board bring-up.</p>
+    <figure>
+      <!-- Swap images/adc/breakout-pcb-1.jpg with a photo of your breakout PCB -->
+      <img src="images/adc/breakout-pcb-1.jpg" alt="Breakout PCB for the SAR ADC">
+      <figcaption>Breakout / verification PCB for chip-level testing.</figcaption>
+    </figure>
+    <figure>
+      <!-- Swap images/adc/breakout-pcb-2.jpg with another photo of your breakout PCB, or delete this figure if you only have one -->
+      <img src="images/adc/breakout-pcb-2.jpg" alt="Breakout PCB for the SAR ADC, second view">
+      <figcaption>Add a caption here — routing detail, connector layout, whatever's worth pointing out.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Design Challenges</h2>
+    <p>The top-level pad frame connection gave me the most trouble. Late in the process I ran into DRC errors on the top metal layer that I wasn't able to fully resolve — I tried adding diodes and series resistors, but the errors persisted. Given the timeline, I ended up finishing that portion of the layout in a rushed state rather than the clean version I'd wanted, which shows up as some extra power consumption in the final design. It's the one part of the chip I'd go back and redo with more time.</p>
+    <p>ENOB also dropped from 7.3 bits pre-layout to 7.1 bits post-layout at a 10MHz clock. My best guess is transistor sizing in a few key devices — likely undersized somewhere in the comparator or switch path — introducing enough mismatch or settling error to cost that extra 0.2 bits. If I revisit this design, resizing those transistors and re-running the sizing analysis is the first thing I'd check.</p>
   </div>
 </section>
 
