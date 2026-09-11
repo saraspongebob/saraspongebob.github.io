@@ -87,9 +87,9 @@
 <section>
   <div class="wrap">
     <h2>Overview</h2>
-    <p>I designed and taped out a sequential 8-bit SAR ADC with a differential input. The signal path starts with a transmission-gate input sampler feeding a capacitive DAC (CDAC); the switches on the CDAC are controlled by a custom SAR logic block that resolves one bit per clock cycle.</p>
-    <p>The SAR logic itself is a chain of D flip-flops — one per bit — where each DFF turns on the next bit's decision cycle in sequence. When a bit becomes active, it drives a small pipeline: the SAR data registry captures that bit's decision, which enables the active registry, which enables the switch driver, which physically sets that bit's CDAC switches. Once a bit resolves, the chain hands off to the next bit, and a final "done" signal flags when all 8 bits have been decided.</p>
-    <p>Every gate in this design — NAND, NOR, inverters, the DFFs, the muxes — was built and laid out by hand rather than pulled from a standard cell library, which put the full instance count over 1,300. The SAR logic layout in particular is something I'm proud of: it's dense, and getting the timing and routing to work cleanly in that footprint took a lot of iteration.</p>
+    <p>I designed and taped out a sequential 8-bit SAR ADC with a differential input. The signal path starts with a transmission-gate input sampling switch which feeds into a capacitive DAC (CDAC); the switches on the CDAC are controlled by a custom SAR logic block that resolves one bit per clock cycle.</p>
+    <p>The SAR logic itself is a chain of 9 D flip-flops — one per bit, and one holds the final conversion — where each DFF turns on the next bit's decision cycle in sequence. When a bit becomes active, it drives a small pipeline: the SAR data registry captures that bit's decision, which enables the active registry, which enables the switch driver, which physically sets that bit's CDAC switches. Once a bit resolves, the chain hands off to the next bit, and a final "done" signal flags when all 8 bits have been decided.</p>
+    <p>Every gate in this design, NAND, NOR, inverters, the DFFs, the muxes, was built and laid out by hand rather than pulled from a standard cell library (lol we did not have them in our library), which put the full instance count over 1,300. The SAR logic layout in particular is something I'm proud of: it's very compact and getting the timing and routing to work cleanly in that footprint took a lot of iteration.</p>
     <p>Each CDAC switch is referenced to the common-mode voltage (0.9V) during sampling. Once a bit's decision is made, the corresponding DFF output connects that bit's capacitor to either VDD (1.8V) or VSS (0V), depending on two things: the comparator's output for that cycle, and whether the capacitor sits in the positive or negative cap chain. That combination is what steers each bit toward the correct code during the successive approximation.</p>
 
     <table class="spec-table">
@@ -97,10 +97,8 @@
       <tr><td class="spec-label">Voltage range</td><td class="spec-value">0 – 1.8V</td></tr>
       <tr><td class="spec-label">Pre-layout ENOB</td><td class="spec-value">7.3 bits</td></tr>
       <tr><td class="spec-label">Post-layout ENOB</td><td class="spec-value">7.1 bits (@ 10MHz clock)</td></tr>
-      <tr><td class="spec-label">Core power</td><td class="spec-value">6–7 µW</td></tr>
+      <tr><td class="spec-label">Core design power consumption</td><td class="spec-value">6–7 µW</td></tr>
       <tr><td class="spec-label">Layout area</td><td class="spec-value">&lt; 400 × 400 µm</td></tr>
-      <tr><td class="spec-label">Instance count</td><td class="spec-value">1,300+</td></tr>
-      <tr><td class="spec-label">Common-mode voltage</td><td class="spec-value">0.9V</td></tr>
     </table>
   </div>
 </section>
@@ -108,7 +106,7 @@
 <section>
   <div class="wrap">
     <h2>Full System Schematic</h2>
-    <p>I captured the full design in KiCad as a single reference sheet — every major block on one page, since it's the fastest way to see how signal flows from the input switches through the CDAC, comparator, and SAR logic. Each block below is broken out with a closer look and more detail.</p>
+    <p>I captured the full design in KiCad as a single reference sheet (cadence screenshots were not very readable). Each block below is broken out with a closer look and more detail.</p>
     <figure>
       <img src="images/adc/full-sar-adc-schematic.png" alt="Full system schematic of the 8-bit SAR ADC, captured in KiCad, showing CDAC sampling switches, CDAC top view, comparator, and SAR logic">
       <figcaption>Full system reference sheet — CDAC sampling switches, CDAC array, StrongARM comparator, and SAR logic.</figcaption>
@@ -119,8 +117,8 @@
 <section>
   <div class="wrap">
     <h2>CDAC Sampling Switches</h2>
-    <p>Three switch types handle sampling and reference switching, all with their bulks tied appropriately (NMOS bulks to VSS, PMOS bulks to VDD) to keep the body effect consistent: a common-mode voltage switch (NMOS + PMOS in parallel, gated by CM/CMB) that holds a node at VCM, a VREF– switch (NMOS, since pulling low is what NMOS does well), and a VREF+ switch (PMOS, for the same reason pulling high).</p>
-    <p>The positive and negative differential chains use opposite switch drivers on purpose — if the NMOS on the positive CDAC's switch is driven by signal A, the corresponding NMOS on the negative CDAC is driven by AB (A inverted). That's what keeps the two chains pushing in opposite directions for a given bit decision, which is what actually encodes the differential result.</p>
+    <p>Three switch types handle sampling and reference switching, all with their bulks tied appropriately (NMOS bulks to VSS, PMOS bulks to VDD) to keep me sane during layout and allow for easy placements of ring gaurds: a common-mode voltage switch (NMOS + PMOS in parallel, gated by CM/CMB) that holds a node at VCM, a VREF– switch (NMOS, since pulling low is what NMOS does well), and a VREF+ switch (PMOS, for the same reason pulling high).</p>
+    <p>The positive and negative differential chains use opposite switch drivers/gate connections, if the NMOS on the positive CDAC's switch is driven by signal A, the corresponding NMOS on the negative CDAC is driven by AB (A inverted). That's what keeps the two chains pushing in opposite directions for a given bit decision, which is what actually encodes the differential result. Switches were sized conservatively after running test scripts and sweeping input voltages.</p>
     <figure>
       <img src="images/adc/cdac-sampling-switches.png" alt="CDAC sampling switches schematic: common-mode voltage switch, VREF- switch, VREF+ switch">
       <figcaption>CDAC sampling switches — common-mode switch, VREF– switch (NMOS), VREF+ switch (PMOS).</figcaption>
@@ -131,7 +129,7 @@
 <section>
   <div class="wrap">
     <h2>CDAC Top View (Capacitor Array)</h2>
-    <p>The capacitor array is binary-weighted across two 8-cap chains — one for the positive differential input, one for the negative. Every cap's bottom plate sits at VCM (0.9V) by default. Once that bit's switch driver turns on, the plate connects to either VREF+ (1.8V) or VREF– (0V) instead — and the positive and negative chains always connect to opposite references, so if the positive chain's cap goes to 1.8V, the matching cap on the negative chain goes to 0V for that same bit.</p>
+    <p>The capacitor array is binary-weighted across two 8-cap chains. One for the positive differential input, one for the negative. Every cap's bottom plate sits at VCM (0.9V) by default. Once that bit's switch driver turns on, the plate connects to either VREF+ (1.8V) or VREF– (0V) instead — and the positive and negative chains always connect to opposite references, so if the positive chain's cap goes to 1.8V, the matching cap on the negative chain goes to 0V for that same bit. Furthermore, in the actual design, the capacitor array is surrounded by dummy caps to prevent mismatch. </p>
     <figure>
       <img src="images/adc/cdac-top-view.png" alt="CDAC top view showing the binary-weighted positive and negative capacitor arrays">
       <figcaption>CDAC top view — binary-weighted positive (C1–C8) and negative (C9–C16) capacitor chains.</figcaption>
@@ -143,7 +141,7 @@
   <div class="wrap">
     <h2>Comparator</h2>
     <p>A StrongARM-style dynamic latch resolves each bit decision. CK-gated switches S1–S4 reset the cross-coupled pair (M5/M6, PMOS) each cycle; below that, another cross-coupled pair (M3/M4, NMOS) and the differential input pair (M1/M2, driven by Vin1/Vin2) let the latch regeneratively collapse toward whichever input is higher once the tail switch (M7, gated by CK) turns on. The outputs feed into buffers and then an SR latch to hold the decision cleanly for the rest of the cycle.</p>
-    <p>Transistor sizes were tuned empirically — sweeping sizes and re-running simulations until the comparator could reliably resolve to under half an LSB (about 7mV), which is the accuracy bar it needs to clear for the ADC's target ENOB.</p>
+    <p>Transistor sizes were tuned empirically — sweeping sizes and re-running simulations until the comparator could reliably resolve to under half an LSB (about 1/2 of 7mV), which is the accuracy bar it needs to clear for the ADC's target ENOB.</p>
     <figure>
       <img src="images/adc/comparator-schematic.png" alt="StrongARM latch comparator schematic with labeled transistors M1-M7 and switches S1-S4">
       <figcaption>StrongARM latch comparator — reset switches S1–S4, cross-coupled M5/M6 and M3/M4, input pair M1/M2, tail switch M7.</figcaption>
@@ -154,27 +152,13 @@
 <section>
   <div class="wrap">
     <h2>SAR Logic</h2>
-    <p>SAMPLE goes high and resets all the registries at the start of every conversion cycle. Which bit is currently "active" is tracked by a SAR pointer — a one-hot token (EN7 down to EN0) that walks through the bits one at a time, one per clock, driven by a chain of DFFs.</p>
-    <p>Each bit has two registries reading that pointer: a <strong>SAR data registry</strong> that captures the comparator's decision (DECISIONSR) the one cycle its EN pulses, and holds that value (SAR/SARB) for the rest of the conversion; and an <strong>active registry</strong> that latches onto its own output the moment EN pulses, staying high for the rest of the conversion rather than pulsing just once like the pointer does. That's the key difference between the two: the pointer moves, the active registry remembers — the switch driver needs a bit's decision locked in for every remaining cycle, not just the one cycle it was made on.</p>
+    <p>SAMPLE goes high and resets all the registries at the start of every conversion cycle. Which bit is currently "active" is tracked by a SAR pointer, (EN7 down to EN0) that walks through the bits one at a time, one per clock, driven by a chain of DFFs.</p>
+    <p>Each bit has two registries reading that pointer: a <strong>SAR data registry</strong> that captures the comparator's decision (DECISIONSR) the one cycle its EN pulses, and holds that value (SAR/SARB) for the rest of the conversion; and an <strong>active registry</strong> that latches onto its own output the moment EN pulses, staying high for the rest of the conversion rather than pulsing just once like the pointer does. </p>
     <p>The output of both registries (ACTIVE and SAR) feeds into the switch driver, which is the block that actually flips the CDAC switches.</p>
     <figure>
       <img src="images/adc/sar-logic-full.png" alt="SAR logic schematic showing SAR pointer, SAR data registry, and SAR active registry blocks">
       <figcaption>SAR logic — pointer chain plus per-bit data and active registries (this chain repeats for all 8 bits).</figcaption>
     </figure>
-
-    <h3 style="font-size:16px; margin:24px 0 8px; font-family:'Poppins',sans-serif;">What's Inside Each Block</h3>
-    <p>Zooming in one level further, the DFF at the heart of every registry is a full custom cell — a master-slave latch pair built from NAND2/NAND3 gates and inverters, with an async reset — not pulled from a standard cell library.</p>
-    <figure>
-      <img src="images/adc/custom-dff.svg" alt="Custom DFF schematic built from NAND gates">
-      <figcaption>Custom DFF built from NAND gates — one of many standard cells designed from scratch for this project.</figcaption>
-    </figure>
-    <p>And the switch driver itself — the block the registries hand off to — is gate-level combinational logic that only fires once CONVERT and ACTIVE are both high, turning that bit's SAR decision into the actual CDAC control signals (CMB, A, B, CONVERTC).</p>
-    <figure>
-      <img src="images/adc/switch-driver-logic.svg" alt="Switch driver gate-level logic schematic">
-      <figcaption>Gate-level switch driver logic, generating the CDAC switch control signals for each bit.</figcaption>
-    </figure>
-    <div class="note">Layout screenshots aren't included here — some of this work touches material I want to double check the sharing terms on before posting publicly. The schematics above are my own design work.</div>
-  </div>
 </section>
 
 <section>
@@ -197,9 +181,9 @@
 <section>
   <div class="wrap">
     <h2>Design Challenges</h2>
-    <p>The top-level pad frame connection gave me the most trouble. Late in the process I ran into DRC errors on the top metal layer that I wasn't able to fully resolve — I tried adding diodes and series resistors, but the errors persisted. Given the timeline, I ended up finishing that portion of the layout in a rushed state rather than the clean version I'd wanted, which shows up as some extra power consumption in the final design. It's the one part of the chip I'd go back and redo with more time.</p>
-    <p>ENOB also dropped from 7.3 bits pre-layout to 7.1 bits post-layout at a 10MHz clock. My best guess is transistor sizing in a few key devices — likely undersized somewhere in the comparator or switch path — introducing enough mismatch or settling error to cost that extra 0.2 bits. If I revisit this design, resizing those transistors and re-running the sizing analysis is the first thing I'd check.</p>
-    <p>The SAR logic is also the block I'd most want to revisit structurally. Having a separate active registry per bit, sitting alongside the data registry and the pointer, works, but it's not obviously the leanest way to do it — the pointer already tracks whose turn it is, and the active registry exists mainly to turn that one-shot pulse into something that stays latched for the rest of the conversion. A version of the pointer that output a sticky (thermometer-code-style) signal directly might collapse two blocks into one. I didn't have time to explore that alternative this round, but it's the first thing I'd prototype if I revisit this design.</p>
+    <p>The top-level pad frame connection gave me the most trouble. Late in the process I ran into LUP DRC errors connecting the blocks to pad frame that I wasn't able to fully resolve. I tried adding diodes and series resistors, but the errors persisted. Given the timeline, I ended up finishing that portion of the layout in a rushed state rather than the clean version I'd wanted, which shows up as some extreme extra power consumption in the final design. It's one part of the chip I'd go back and redo with more time (that and some transistor sizing).</p>
+    <p>ENOB also dropped from 7.3 bits pre-layout to 7.1 bits post-layout at a 10MHz clock. My best guess is transistor sizing in a few key devices, sampling switches should definetly be wider and likely undersized somewhere in the comparator or switch path introducing enough mismatch or settling error to cost that extra bits. If I revisit this design, resizing those transistors and re-running the sizing analysis is the first thing I'd check. Also some of my routing on the top metal layer at the top block level should def be fixed.</p>
+    <p>The SAR logic is also the block I'd most want to revisit structurally. Having a separate active registry per bit, sitting alongside the data registry and the pointer, works, but it's not obviously the leanest way to do it, the pointer already tracks whose turn it is, and the active registry exists mainly to turn that one-shot pulse into something that stays latched for the rest of the conversion. A version of the pointer that output a sticky (thermometer-code-style) signal directly might collapse two blocks into one. I didn't have time to explore that alternative this round, but it's the first thing I'd prototype if I revisit this design. </p>
   </div>
 </section>
 
