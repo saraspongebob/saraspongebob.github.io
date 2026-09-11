@@ -26,8 +26,9 @@
   h1{ font-size:clamp(28px,4vw,38px); margin-bottom:14px; }
   section{ padding:40px 0; }
   section p{ color:var(--ink-soft); max-width:70ch; margin-bottom:14px; }
-  .photo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:28px; }
-  figure img{ border:1px solid var(--border); border-radius:10px; aspect-ratio:4/3; object-fit:cover; width:100%; }
+  .photo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:28px; align-items:start; }
+  figure img{ border:1px solid var(--border); border-radius:10px; width:100%; height:auto; }
+  figure{ align-self:start; }
   figcaption{ font-size:13px; color:var(--ink-soft); margin-top:8px; }
   footer{ padding:40px 0 60px; text-align:center; font-size:13px; color:var(--ink-soft); }
   @media (max-width:640px){ .photo-grid{ grid-template-columns:1fr; } }
